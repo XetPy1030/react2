@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { Work1, Work2, Work3, Work4, Work5, Work6 } from './components/works';
+import { Work1, Work2 } from './components/works';
 
 function App() {
   return (
@@ -8,11 +8,7 @@ function App() {
       'backgroundColor': 'white'
     }}>
       {/* <Work1 /> */}
-      {/* <Work2 /> */}
-      {/* <Work3 /> */}
-      {/* <Work4 /> */}
-      {/* <Work5 /> */}
-      <Work6 />
+      <Work2 />
     </div>
   );
 }
