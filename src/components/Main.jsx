@@ -1,48 +1,21 @@
+import {Link, Navigate} from "react-router-dom";
 
 
-
-export function Main({products, cart, setCart, currentUser}) {
-  function isProductInCart(product) {
-    return cart.some((cartProduct) => cartProduct.id === product.id);
-  }
-
-  function addProductToCart(product, event) {
-    event.target.parentNode.classList.add("hide");
-    event.target.parentNode.classList.add("hide_animation");
-    product = {
-      ...product,
-      quantity: 1
-    }
-    setCart([...cart, product]);
-  }
-
-  const productsList = products.map((product) => {
-    return (
-      <li key={product.id}>
-        <h2>{product.name}</h2>
-        <p>{product.description}</p>
-        <p>{product.price} рублей</p>
-        {
-          currentUser ? (
-            !isProductInCart(product) ? (
-              <button onClick={(event) => addProductToCart(product, event)}>Add to cart</button>
-            ) : (
-              <button disabled>Added to cart</button>
-            )
-          ) : (
-            <button disabled>Login to add to cart</button>
-          )
-        }
-      </li>
-    );
-  });
-
+export function Main({books}) {
+  // book: id, title, author, description, comments(id, author, comment, datetime_of_comment)
   return (
     <main>
-      <h1>Products</h1>
+      <h1>Books</h1>
       <ul>
-        {productsList}
+        {books.map((book) => {
+          return (
+            <li key={book.id}>
+              <h2>{book.title}</h2>
+              <Link to={`/book/${book.id}`}>View</Link>
+            </li>
+          );
+        })}
       </ul>
     </main>
-  );
+  )
 }

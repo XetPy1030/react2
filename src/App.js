@@ -1,116 +1,49 @@
 import './App.css';
 import {Route, Routes} from "react-router-dom";
-import {NavBar} from "./NavBar";
+import {useState} from "react";
 import {Main} from "./components/Main";
-import {Cart} from "./components/Cart";
-import {useEffect, useState} from "react";
-import {Orders} from "./components/Orders";
-import {Login, Register} from "./components/UserMenu";
-
-
-const products = [
-  {
-    id: 1,
-    name: 'Product 1',
-    price: 100,
-    description: 'Product 1 description'
-  },
-  {
-    id: 2,
-    name: 'Product 2',
-    price: 200,
-    description: 'Product 2 description'
-  },
-  {
-    id: 3,
-    name: 'Product 3',
-    price: 300,
-    description: 'Product 3 description'
-  },
-  {
-    id: 4,
-    name: 'Product 4',
-    price: 400,
-    description: 'Product 4 description'
-  }
-];
+import {AddBook, Book} from "./components/Book";
+import {About} from "./components/About";
+import {NavBar} from "./components/NavBar";
 
 
 function App() {
-  const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-
-  const [cart, setCart] = useState([]);
-  const [orders, setOrders] = useState([]);
-
-  function saveUser(user) {
-    const newUsers = users.map((u) => {
-      if (u.id === user.id) {
-        u.cart = cart;
-        u.orders = orders;
+  const [books, setBooks] = useState([
+      {
+        id: 1,
+        title: "The Hobbit",
+        author: "J.R.R. Tolkien",
+        description: "Bilbo Baggins is a hobbit who enjoys a comfortable, unambitious life, rarely traveling any farther than his pantry or cellar. But his contentment is disturbed when the wizard Gandalf and a company of dwarves arrive on his doorstep one day to whisk him away on an adventure. They have launched a plot to raid the treasure hoard guarded by Smaug the Magnificent, a large and very dangerous dragon.",
+        comments: [
+          {
+            id: 1,
+            author: "John Doe",
+            comment: "This is a great book",
+            datetime_of_comment: "2021-03-01 12:00:00"
+          }
+        ]
       }
-      return u;
-    });
-    setUsers(newUsers);
-  }
-
-  // TODO: эффекты ошибок
-  // TODO: проверка ошибок
-
-  useEffect(() => {
-    if (currentUser) {
-      saveUser(currentUser);
-    }
-  }, [cart, orders])
+    ]);
 
   return (
     <div className="App" style={{
       'backgroundColor': 'white'
     }}>
       <NavBar
-        cart={cart}
-        setCart={setCart}
-        orders={orders}
-        setOrders={setOrders}
-        users={users}
-        setUsers={setUsers}
-        currentUser={currentUser}
-        setCurrentUser={setCurrentUser}
       />
       <Routes>
         <Route path="/" element={<Main
-          products={products}
-          cart={cart}
-          setCart={setCart}
-          currentUser={currentUser}
-          saveUser={saveUser}
+          books={books}
         />} />
-        <Route path="/cart" element={<Cart
-          cart={cart}
-          setCart={setCart}
-          orders={orders}
-          setOrders={setOrders}
-          currentUser={currentUser}
-          saveUser={saveUser}
+        <Route path="/book/:id" element={<Book
+          books={books}
+          setBooks={setBooks}
         />} />
-        <Route path="/orders" element={<Orders
-          orders={orders}
-          currentUser={currentUser}
-          saveUser={saveUser}
+        <Route path="/addbook" element={<AddBook
+          books={books}
+          setBooks={setBooks}
         />} />
-        <Route path="/login" element={<Login
-          users={users}
-          setUsers={setUsers}
-          currentUser={currentUser}
-          setCurrentUser={setCurrentUser}
-          setCart={setCart}
-          setOrders={setOrders}
-        />} />
-        <Route path="/register" element={<Register
-          users={users}
-          setUsers={setUsers}
-          currentUser={currentUser}
-          setCurrentUser={setCurrentUser}
+        <Route path="/about" element={<About
         />} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
