@@ -9,6 +9,8 @@ function App() {
   const [weather, setWeather] = useState({});
 
   const getWeather = async (e) => {
+    setWeather({error: 'Загрузка...'});
+
     e.preventDefault();
     const city = e.target.elements.city.value;
 

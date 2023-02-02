@@ -1,11 +1,21 @@
 export function Weather({weather}) {
   const city = weather.name;
 
+  if (weather.cod === '404') {
+    return (
+      <div className="weather">
+        <div className="error">
+          <h1>Город не найден</h1>
+        </div>
+      </div>
+    )
+  }
+
   if (weather.name === undefined) {
     return (
       <div className="weather">
         <div className="error">
-          <h1>City not found</h1>
+          <h1>Введите город</h1>
         </div>
       </div>
     )
