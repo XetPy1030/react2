@@ -30,8 +30,7 @@ export function Cart({cart, setCart, orders, setOrders, currentUser}) {
     return (
       <li key={product.id}>
         <h2>{product.name}</h2>
-        <p>{product.description}</p>
-        <p>{product.price} рублей</p>
+        <img src={product.strDrinkThumb} style={{width: '100px'}} />
         <p>Quantity: {product.quantity}</p>
         <button onClick={() => removeProductFromCart(product)}>Remove from cart</button>
         <button onClick={() => updateProductQuantity(product, 1)}>Add 1</button>

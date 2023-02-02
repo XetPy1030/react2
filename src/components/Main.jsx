@@ -20,8 +20,7 @@ export function Main({products, cart, setCart, currentUser}) {
     return (
       <li key={product.id}>
         <h2>{product.name}</h2>
-        <p>{product.description}</p>
-        <p>{product.price} рублей</p>
+        <img src={product.strDrinkThumb} style={{width: '100px'}} />
         {
           currentUser ? (
             !isProductInCart(product) ? (

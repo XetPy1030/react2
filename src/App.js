@@ -43,6 +43,29 @@ function App() {
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
 
+  const [products, setProducts] = useState([]);
+
+  const getDrinksRequest = async () => {
+    const url = 'https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail';
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  }
+
+  useEffect(() => {
+    getDrinksRequest().then(data => {
+      data.drinks.forEach((item) => {
+        item.id = item.idDrink;
+        delete item.idDrink;
+      });
+      data.drinks.forEach((item) => {
+        item.name = item.strDrink;
+        delete item.strDrink;
+      });
+      setProducts(data.drinks);
+    });
+  }, []);
+
   function saveUser(user) {
     const newUsers = users.map((u) => {
       if (u.id === user.id) {
