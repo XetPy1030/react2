@@ -1,61 +1,32 @@
-import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+import {BrowserRouter, createBrowserRouter, Route, Router, RouterProvider, Routes} from "react-router-dom";
 import {Home} from "./Home";
-import {Film} from "./starwars/Film";
-import {Character} from "./starwars/Character";
-import {Planet} from "./starwars/Planet";
-import {Starship} from "./starwars/Starship";
-import {Species} from "./starwars/Spec";
-import {Vehicle} from "./starwars/Vehicle";
-import {Characters} from "./starwars/Characters";
-import {Planets} from "./starwars/Planets";
-import React from "react";
-import {Starships} from "./starwars/Starships";
+import {HomePostEdit} from "./HomePostEdit";
+import {HomePost} from "./HomePost";
+import {useState} from "react";
+import {useFetch} from "../api/hook";
+import {base_url} from "../api/const";
+
+export const PageRouting = () => {
+    const [localPosts, setLocalPosts] = useState([]);
+    const {data, isPending, error} = useFetch({url: base_url + "posts"});
+    const [isFilled, setIsFilled] = useState(false);
+
+    if (!isPending && !isFilled) {
+        setIsFilled(true);
+        setLocalPosts(data);
+    }
 
 
-export const router  = createBrowserRouter([
-  {
-    path: '/',
-    element: <Home />
-  },
-  {
-    path: 'films/:id',
-    element: <Film />
-  },
-  {
-    path: '/heroes',
-    element: <Characters />
-  },
-  {
-    path: '/heroes/:id',
-    element: <Character />
-  },
-  {
-    path: '/planets',
-    element: <Planets />
-  },
-  {
-    path: '/planets/:id',
-    element: <Planet />
-  },
-  {
-    path: '/starships',
-    element: <Starships />
-  },
-  {
-    path: '/starships/:id',
-    element: <Starship />
-  },
-  {
-    path: '/species/:id',
-    element: <Species />
-  },
-  {
-    path: '/vehicles/:id',
-    element: <Vehicle />
-  }
-])
-export function PageRouting () {
-  return (
-      <RouterProvider router={router} />
-  );
+
+    return (
+        <div>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Home posts={localPosts} setPosts={setLocalPosts} error={error} isPending={!isFilled} />} />
+                    <Route path="/:id" element={<HomePost posts={localPosts} setPosts={setLocalPosts} error={error} isPending={!isFilled} />} />
+                    <Route path="/edit/:id" element={<HomePostEdit posts={localPosts} setPosts={setLocalPosts} error={error} isPending={!isFilled} />} />
+                </Routes>
+            </BrowserRouter>
+        </div>
+    );
 }

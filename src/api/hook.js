@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-export function useFetch (url) {
+export function useFetch ({url, options}) {
     const [data, setData] = useState(null);
     const [isPending, setIsPending] = useState(true);
     const [error, setError] = useState(null);
@@ -9,7 +9,7 @@ export function useFetch (url) {
         const abortCont = new AbortController();
 
         setTimeout(() => {
-            fetch(url, { signal: abortCont.signal })
+            fetch(url, { signal: abortCont.signal, ...options })
                 .then((res) => {
                     if (!res.ok) {
                         throw Error('Could not fetch the data for that resource');
@@ -32,7 +32,7 @@ export function useFetch (url) {
         }, 1000);
 
         return () => abortCont.abort();
-    }, [url]);
+    }, [url, options]);
 
     return { data, isPending, error };
 }
