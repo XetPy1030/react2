@@ -43,3 +43,17 @@ ul {
     padding: 0;
     overflow: hidden;
 }
+
+/* Крутая анимация для обновления обьекта */
+@keyframes LikedAnimation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.liked {
+  animation: App-logo-spin infinite 20s linear;
+}

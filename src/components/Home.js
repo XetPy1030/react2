@@ -138,11 +138,12 @@ export function AlbumDetail({likes, setLikes}) {
     const {id} = useParams();
     const {data, isPending, error} = useFetch({url: base_url + "albums/" + id + "/photos"});
 
-    const handleLike = (id_object) => {
+    const handleLike = (id_object, event) => {
         const newLikes = [...likes];
         const like = {id: id_object, id_album: id};
         newLikes.push(like);
         setLikes(newLikes);
+        event.target.parentElement.classList.add("liked");
     };
 
     return (
@@ -157,10 +158,10 @@ export function AlbumDetail({likes, setLikes}) {
                 <div>
                     <div>
                         {data.map((photo) => (
-                            <div className="photo-preview" key={photo.id}>
+                            <div className={"photo-preview"} key={photo.id}>
                                 <img src={photo.thumbnailUrl} alt={photo.title}/>
                                 <h2>{photo.title}</h2>
-                                <button onClick={() => handleLike(photo.id)}>Like</button>
+                                <button onClick={(event) => handleLike(photo.id, event)}>Like</button>
                             </div>
                         ))}
                     </div>
@@ -217,12 +218,13 @@ export function Login({users, setCurrentUser}) {
     const navigate = useNavigate();
 
     function check_user_in_users(user) {
-        return users.find((user) => user.email === user.email && user.password === user.password);
+        return users.find((u) => u.email === user.email && u.password === user.password);
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const user = {email, password};
+
         if (check_user_in_users(user)) {
             setCurrentUser(user);
             alert("Logged in successfully");
