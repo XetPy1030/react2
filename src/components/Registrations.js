@@ -1,16 +1,17 @@
 import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 
-export function Register() {
+export function Register({users, setUsers, currentUser, setCurrentUser}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [repassword, setRepassword] = useState("");
-    const [error, setError] = useState(null);
+    const [errorEmail, setErrorEmail] = useState("");
+    const [errorPassword, setErrorPassword] = useState("");
 
     const navigate = useNavigate();
 
     function emailInUser(email) {
-        return window.users.find((user) => user.email === email);
+        return users.find((user) => user.email === email);
     }
 
     function checkValidEmail(email) {
@@ -22,61 +23,71 @@ export function Register() {
         return password.length >= 6;
     }
 
+    function checkEmail(email) {
+        if (!checkValidEmail(email)) {
+            setErrorEmail("Invalid email");
+            return true;
+        }
+
+        if (emailInUser(email)) {
+            setErrorEmail("Email already in use");
+            return true;
+        }
+        setErrorEmail("");
+    }
+
+    function checkPassword(password) {
+        if (!checkValidPassword(password)) {
+            setErrorPassword("Invalid password");
+            return true;
+        }
+
+        if (password!== repassword) {
+            setErrorPassword("Passwords don't match");
+            return true;
+        }
+        setErrorPassword("");
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const user = {email, password};
 
-        if (!checkValidEmail(email)) {
-            setError("Invalid email");
+        if (checkEmail(email) || checkPassword(password)) {
             return;
         }
 
-        if (!checkValidPassword(password)) {
-            setError("Invalid password");
-            return;
-        }
-
-        if (password!== repassword) {
-            setError("Passwords don't match");
-            return;
-        }
-
-        if (emailInUser(email)) {
-            setError("Email already in use");
-            return;
-        }
-        window.store.users = [...window.store.users, user];
-        window.store.currentUser = user;
-        alert("User created and logged in");
-        navigate("/");
+        setUsers([...users, user]);
+        alert("User created successfully, you are now logged in");
+        navigate("/login");
 
     }
 
     return (
         <div className="registrations">
-            <Link to={"/login"}>
-                <button>Login</button>
-            </Link>
-            <Link to={"/"}
-            >
-                <button>Back</button>
-            </Link>
             <h2>Registrations</h2>
             <form onSubmit={handleSubmit}>
                 <label>Email</label>
-                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                <input type="text" value={email} className={
+                    errorEmail ? "error" : ""
+                } onChange={(e) => setEmail(e.target.value)}/>
+                <p>{errorEmail}</p>
                 <label>Password</label>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                <input type="password" className={
+                    errorPassword ? "error" : ""
+                } value={password} onChange={(e) => setPassword(e.target.value)}/>
                 <label>Repeat Password</label>
-                <input type="password" value={repassword} onChange={(e) => setRepassword(e.target.value)}/>
+                <input type="password" className={
+                    errorPassword ? "error" : ""
+                } value={repassword} onChange={(e) => setRepassword(e.target.value)}/>
+                <p>{errorPassword}</p>
                 <button>Register</button>
             </form>
-            {error && <div>{error}</div>}
         </div>
     );
 }
 
-export function Login() {
+export function Login({users, currentUser, setCurrentUser}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -84,7 +95,7 @@ export function Login() {
     const navigate = useNavigate();
 
     function check_user_in_users(user) {
-        return window.users.find((u) => u.email === user.email && u.password === user.password);
+        return users.find((u) => u.email === user.email && u.password === user.password);
     }
 
     const handleSubmit = (e) => {
@@ -92,7 +103,7 @@ export function Login() {
         const user = {email, password};
 
         if (check_user_in_users(user)) {
-            window.store.currentUser = user;
+            setCurrentUser(user);
             alert("Logged in successfully");
             navigate("/");
             return;
@@ -102,12 +113,6 @@ export function Login() {
 
     return (
         <div className="login">
-            <Link to={"/register"}>
-                <button>Register</button>
-            </Link>
-            <Link to={"/"}>
-                <button>Back</button>
-            </Link>
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <label>Email</label>
