@@ -151,6 +151,9 @@ export function AlbumDetail({likes, setLikes}) {
             <Link to={"/"}>
                 <button>Back</button>
             </Link>
+            <Link to={"/likes"}>
+                <button>Likes({likes.length})</button>
+            </Link>
             <h2>Album</h2>
             {error && <div>{error}</div>}
             {isPending && <div>Loading...</div>}
